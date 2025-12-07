@@ -1,0 +1,10 @@
+artifact_location: file:///C:\Users\eyabe\OneDrive\Desktop\projet\mlruns/284438070019608692/models/m-3e77e97ba52e4c0785fd413fc8ff4d30/artifacts
+creation_timestamp: 1765147441733
+experiment_id: '284438070019608692'
+last_updated_timestamp: 1765147444003
+model_id: m-3e77e97ba52e4c0785fd413fc8ff4d30
+model_type: null
+name: model
+source_run_id: 2e9e36cef72e4ff4882b7f6243807693
+status: 2
+status_message: null
