@@ -1,130 +1,72 @@
-# app_streamlit.py → VERSION FINALE OFFICIELLE (Anglais + Connecté API + Ultra-beau)
-import streamlit as st
-import requests
-import json
+# src/api/app.py ← VERSION FINALE QUI MARCHE À 100%
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import joblib
+import pandas as pd
 
-# ─────────────────────────────────────────────────────────────
-# Page config + Design luxueux
-# ─────────────────────────────────────────────────────────────
-st.set_page_config(
-    page_title="Ames House Price Predictor",
-    page_icon="house",
-    layout="centered",
-    initial_sidebar_state="expanded"
-)
+app = FastAPI(title="House Price Prediction - Khouloud Ouni")
 
-# Custom CSS pour rendre ça magnifique
-st.markdown("""
-<style>
-    .main {background-color: #f8f9fa;}
-    .stButton>button {background-color: #1E90FF; color: white; font-weight: bold; border-radius: 10px; height: 3em; width: 100%;}
-    .prediction {font-size: 48px; font-weight: bold; text-align: center; color: #1E90FF;}
-    .header {font-size: 42px; text-align: center; color: #1E90FF; font-weight: bold;}
-    .footer {text-align: center; margin-top: 50px; color: #666;}
-</style>
-""", unsafe_allow_html=True)
+# Chargement du modèle et préprocesseur
+model = joblib.load("models/best_model.pkl")
+preprocessor = joblib.load("data/processed/preprocessor.pkl")
 
-# ─────────────────────────────────────────────────────────────
-# Titre principal
-# ─────────────────────────────────────────────────────────────
-st.markdown("<h1 class='header'>Ames House Price Predictor</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 20px;'>MLOps Project • Khouloud Ouni & Eya Ben Khadhra</p>", unsafe_allow_html=True)
-st.markdown("---")
+class HouseFeatures(BaseModel):
+    Gr_Liv_Area: float = 1500
+    Total_Bsmt_SF: float = 1000
+    Year_Built: int = 2000
+    Lot_Area: int = 8450
+    Overall_Qual: int = 7
+    Overall_Cond: int = 5
+    Full_Bath: int = 2
+    TotRms_AbvGrd: int = 7
+    Garage_Cars: int = 2
+    Garage_Area: int = 480
+    First_Flr_SF: int = 1000
+    Second_Flr_SF: int = 500
+    Neighborhood: str = "NAmes"
+    MS_Zoning: str = "RL"
+    Sale_Condition: str = "Normal"
+    Kitchen_Qual: str = "TA"
+    Exter_Qual: str = "TA"
+    Heating_QC: str = "Ex"
+    Central_Air: str = "Y"
+    Foundation: str = "PConc"
 
-# ─────────────────────────────────────────────────────────────
-# Sidebar avec info projet
-# ─────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/8/87/House_icon.png", width=100)
-    st.markdown("### Model Performance")
-    st.success("Random Forest\nRMSE: $28,208")
-    st.info("Trained on Ames Housing Dataset\n2,930 properties • 79 features")
-    st.markdown("### Tech Stack")
-    st.write("• FastAPI • DVC • MLflow\n• Docker • GitHub Actions\n• Streamlit • Evidently AI")
+@app.get("/")
+def home():
+    return {"message": "API Prédiction Prix Maison - Khouloud Ouni", "docs": "/docs"}
 
-# ─────────────────────────────────────────────────────────────
-# Inputs en deux colonnes
-# ─────────────────────────────────────────────────────────────
-st.markdown("### Enter House Features")
+@app.post("/predict")
+def predict(features: HouseFeatures):
+    try:
+        # Toutes les colonnes nécessaires
+        data = pd.DataFrame([{  
+            'Gr Liv Area': features.Gr_Liv_Area,
+            'Total Bsmt SF': features.Total_Bsmt_SF,
+            'Year Built': features.Year_Built,
+            'Lot Area': features.Lot_Area,
+            'Overall Qual': features.Overall_Qual,
+            'Overall Cond': features.Overall_Cond,
+            'Full Bath': features.Full_Bath,
+            'TotRms AbvGrd': features.TotRms_AbvGrd,
+            'Garage Cars': features.Garage_Cars,
+            'Garage Area': features.Garage_Area,
+            '1st Flr SF': features.First_Flr_SF,
+            '2nd Flr SF': features.Second_Flr_SF,
+            'Neighborhood': features.Neighborhood,
+            'MS Zoning': features.MS_Zoning,
+            'Sale Condition': features.Sale_Condition,
+            'Kitchen Qual': features.Kitchen_Qual,
+            'Exter Qual': features.Exter_Qual,
+            'Heating QC': features.Heating_QC,
+            'Central Air': features.Central_Air,
+            'Foundation': features.Foundation
+        }])
 
-col1, col2 = st.columns(2)
+        X = preprocessor.transform(data)
+        prediction = model.predict(X)[0]
 
-with col1:
-    gr_liv_area = st.number_input("Living Area (sq ft)", 500, 6000, 1710)
-    total_bsmt_sf = st.number_input("Basement Area (sq ft)", 0, 6000, 856)
-    year_built = st.number_input("Year Built", 1870, 2025, 2003)
-    lot_area = st.number_input("Lot Area (sq ft)", 1300, 215000, 8450)
-    overall_qual = st.slider("Overall Quality (1-10)", 1, 10, 7)
-    full_bath = st.selectbox("Full Bathrooms", [1, 2, 3, 4], index=1)
+        return {"predicted_sale_price": round(float(prediction), 2)}
 
-with col2:
-    neighborhood = st.selectbox("Neighborhood", [
-        "NAmes", "CollgCr", "OldTown", "Edwards", "Somerst",
-        "Gilbert", "NridgHt", "Sawyer", "NWAmes", "BrkSide", "Crawfor", "NoRidge"
-    ])
-    kitchen_qual = st.selectbox("Kitchen Quality", ["TA", "Gd", "Ex", "Fa"], index=1)
-    exter_qual = st.selectbox("Exterior Quality", ["TA", "Gd", "Ex", "Fa"], index=0)
-    heating_qc = st.selectbox("Heating Quality", ["Ex", "Gd", "TA", "Fa", "Po"], index=0)
-    central_air = st.selectbox("Central Air", ["Y", "N"], index=0)
-
-# ─────────────────────────────────────────────────────────────
-# Bouton de prédiction + appel API
-# ─────────────────────────────────────────────────────────────
-if st.button("Predict House Price", type="primary", use_container_width=True):
-    with st.spinner("Contacting prediction API..."):
-        payload = {
-            "Gr_Liv_Area": float(gr_liv_area),
-            "Total_Bsmt_SF": float(total_bsmt_sf),
-            "Year_Built": int(year_built),
-            "Lot_Area": int(lot_area),
-            "Overall_Qual": int(overall_qual),
-            "Overall_Cond": 5,
-            "Full_Bath": int(full_bath),
-            "TotRms_AbvGrd": 8,
-            "Garage_Cars": 2,
-            "Garage_Area": 548,
-            "First_Flr_SF": 856,
-            "Second_Flr_SF": 854,
-            "Neighborhood": neighborhood,
-            "MS_Zoning": "RL",
-            "Sale_Condition": "Normal",
-            "Kitchen_Qual": kitchen_qual,
-            "Exter_Qual": exter_qual,
-            "Heating_QC": heating_qc,
-            "Central_Air": central_air,
-            "Foundation": "PConc"
-        }
-
-        try:
-            response = requests.post("http://127.0.0.1:8000/predict", json=payload)
-            if response.status_code == 200:
-                result = response.json()
-                price = result["predicted_sale_price"]
-                
-                st.markdown("---")
-                st.markdown(f"<h2 class='prediction'>${price:,.0f}</h2>", unsafe_allow_html=True)
-                
-                if price > 300000:
-                    st.balloons()
-                    st.success("Luxury Property Detected!")
-                elif price > 200000:
-                    st.success("Premium Property")
-                elif price > 150000:
-                    st.info("Great Family Home")
-                else:
-                    st.info("Affordable Housing")
-            else:
-                st.error(f"API Error: {response.status_code} - {response.text}")
-        except:
-            st.error("Cannot reach API. Make sure FastAPI is running on port 8000")
-
-# ─────────────────────────────────────────────────────────────
-# Footer
-# ─────────────────────────────────────────────────────────────
-st.markdown("---")
-st.markdown("""
-<div class='footer'>
-    <b>MLOps Project • 8 Weeks • 100% Compliant with Requirements</b><br>
-    Khouloud Ouni & Eya Ben Khadhra • December 2025
-</div>
-""", unsafe_allow_html=True)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
