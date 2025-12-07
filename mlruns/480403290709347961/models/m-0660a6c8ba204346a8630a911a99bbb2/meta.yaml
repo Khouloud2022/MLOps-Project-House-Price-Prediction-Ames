@@ -1,0 +1,10 @@
+artifact_location: file:///D:\Users\khouloudouni\Desktop\House Price Prediction\mlruns/480403290709347961/models/m-0660a6c8ba204346a8630a911a99bbb2/artifacts
+creation_timestamp: 1765145344546
+experiment_id: '480403290709347961'
+last_updated_timestamp: 1765145367007
+model_id: m-0660a6c8ba204346a8630a911a99bbb2
+model_type: null
+name: model
+source_run_id: b0ac9410ad4148a5822a86c3d1f13a97
+status: 2
+status_message: null
