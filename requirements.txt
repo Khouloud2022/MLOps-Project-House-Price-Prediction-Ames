@@ -11,3 +11,4 @@ pytest==9.0.2
 evidently==0.7.17  
 matplotlib==3.10.7
 seaborn==0.13.2
+streamlit==1.52.1
