@@ -1,0 +1,14 @@
+artifact_uri: file:///D:\Users\khouloudouni\Desktop\House Price Prediction\mlruns/924618883179364093/d1122866352247ceb8dabe566b39c21e/artifacts
+end_time: 1765140329099
+entry_point_name: ''
+experiment_id: '924618883179364093'
+lifecycle_stage: active
+run_id: d1122866352247ceb8dabe566b39c21e
+run_name: RandomForest_Best
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765140322113
+status: 3
+tags: []
+user_id: Khouloud

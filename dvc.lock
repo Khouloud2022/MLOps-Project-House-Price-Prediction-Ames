@@ -1,0 +1,78 @@
+schema: '2.0'
+stages:
+  process_data:
+    cmd: python src/data/make_dataset.py
+    deps:
+    - path: data/raw/AmesHousing.csv
+      hash: md5
+      md5: 75f0f0b3a4328aa900cdc5fc99fe6eba
+      size: 987811
+    - path: src/data/make_dataset.py
+      hash: md5
+      md5: 534b42aff70f9fa1f4a878da7a01b7de
+      size: 978
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 658470e6cfa062e4a6beb990020e920b
+      size: 189893
+    - path: data/processed/train.csv
+      hash: md5
+      md5: fdc9ed2d79e1ca6f7aff841dd0e45ff7
+      size: 757965
+  build_features:
+    cmd: python src/features/build_features.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 658470e6cfa062e4a6beb990020e920b
+      size: 189893
+    - path: data/processed/train.csv
+      hash: md5
+      md5: fdc9ed2d79e1ca6f7aff841dd0e45ff7
+      size: 757965
+    - path: src/features/build_features.py
+      hash: md5
+      md5: d152d21e450b4f282ec93252c5da178f
+      size: 2515
+    outs:
+    - path: data/processed/X_test.npy
+      hash: md5
+      md5: 3eff89ae8af3fe0fa200317104041b84
+      size: 347040
+    - path: data/processed/X_train.npy
+      hash: md5
+      md5: 23c7dc4909d8e5f2c987189d2b507f29
+      size: 1387776
+    - path: data/processed/preprocessor.pkl
+      hash: md5
+      md5: 64e594dbe2cce94d2911d992fbe8d305
+      size: 6372
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 257634c8a316b545383e709cb202e9f1
+      size: 4648
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: d1ec9798294df21867e3e43c6ecdec98
+      size: 18577
+  train_model:
+    cmd: python src/models/train_model.py
+    deps:
+    - path: data/processed/X_train.npy
+      hash: md5
+      md5: 23c7dc4909d8e5f2c987189d2b507f29
+      size: 1387776
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: d1ec9798294df21867e3e43c6ecdec98
+      size: 18577
+    - path: src/models/train_model.py
+      hash: md5
+      md5: 09367c65725d4d7c6afc8dfaf942bbb3
+      size: 2010
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: f7631edb2d885eca62b1f191b895e3da
+      size: 82324753

@@ -8,7 +8,7 @@ stages:
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
-  
+
   build_features:
     cmd: python src/features/build_features.py
     deps:
@@ -16,17 +16,17 @@ stages:
       - data/processed/train.csv
       - data/processed/test.csv
     outs:
-      - data/processed/X_train_features.csv
-      - data/processed/y_train.csv
-      - data/processed/X_test_features.csv
-      - data/processed/y_test.csv
       - data/processed/preprocessor.pkl
-  
+      - data/processed/X_train.npy
+      - data/processed/X_test.npy
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+
   train_model:
     cmd: python src/models/train_model.py
     deps:
       - src/models/train_model.py
-      - data/processed/X_train_features.csv
+      - data/processed/X_train.npy
       - data/processed/y_train.csv
     outs:
       - models/best_model.pkl
