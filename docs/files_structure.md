@@ -38,4 +38,3 @@ project-house-price-mlops/
 ├── requirements.txt       # Python dependencies 
 ├── README.md              # Comprehensive README 
 ├── .gitignore             # Ignore venv, __pycache__, etc.
-└── setup.py               # Optional: If packaging as a Python module
