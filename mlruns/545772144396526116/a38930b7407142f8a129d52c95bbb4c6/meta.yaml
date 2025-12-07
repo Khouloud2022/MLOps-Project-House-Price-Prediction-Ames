@@ -1,0 +1,14 @@
+artifact_uri: file:///D:\Users\khouloudouni\Desktop\House Price Prediction\mlruns/545772144396526116/a38930b7407142f8a129d52c95bbb4c6/artifacts
+end_time: 1765140885654
+entry_point_name: ''
+experiment_id: '545772144396526116'
+lifecycle_stage: active
+run_id: a38930b7407142f8a129d52c95bbb4c6
+run_name: LinearRegression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765140881274
+status: 3
+tags: []
+user_id: Khouloud
