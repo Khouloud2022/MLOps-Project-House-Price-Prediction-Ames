@@ -1,0 +1,9 @@
+# .gitignore
+venv/
+__pycache__/
+*.pyc
+.dvc/cache/
+*.egg-info/
+data/raw/*
+data/processed/*  # Unless versioned with DVC
+mlruns/  # MLflow artifacts (optional, if local)
