@@ -118,7 +118,6 @@ class BivariateAnalyzer:
         self._strategy.analyze(df, feature1, feature2)
 
 
-# Example usage
 if __name__ == "__main__":
     # Example usage of the BivariateAnalyzer with different strategies.
 

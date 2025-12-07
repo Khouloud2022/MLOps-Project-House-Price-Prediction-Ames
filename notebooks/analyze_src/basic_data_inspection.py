@@ -7,6 +7,7 @@ import pandas as pd
 # --------------------------------------------------
 # This class defines a common interface for data inspection strategies.
 # Subclasses must implement the inspect method.
+
 class DataInspectionStrategy(ABC):
     @abstractmethod
     def inspect(self, df: pd.DataFrame):
@@ -101,7 +102,6 @@ class DataInspector:
         self._strategy.inspect(df)
 
 
-# Example usage
 if __name__ == "__main__":
     # Example usage of the DataInspector with different strategies.
 
@@ -116,3 +116,4 @@ if __name__ == "__main__":
     # inspector.set_strategy(SummaryStatisticsInspectionStrategy())
     # inspector.execute_inspection(df)
     pass
+

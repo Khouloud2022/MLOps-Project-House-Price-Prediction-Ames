@@ -85,7 +85,7 @@ class SimpleMissingValuesAnalysis(MissingValuesAnalysisTemplate):
         plt.show()
 
 
-# Example usage
+
 if __name__ == "__main__":
     # Example usage of the SimpleMissingValuesAnalysis class.
 

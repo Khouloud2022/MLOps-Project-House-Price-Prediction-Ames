@@ -114,7 +114,6 @@ class UnivariateAnalyzer:
         self._strategy.analyze(df, feature)
 
 
-# Example usage
 if __name__ == "__main__":
     # Example usage of the UnivariateAnalyzer with different strategies.
 
