@@ -1,0 +1,14 @@
+artifact_uri: file:///C:\Users\eyabe\OneDrive\Desktop\projet\mlruns/284438070019608692/2e9e36cef72e4ff4882b7f6243807693/artifacts
+end_time: 1765147444117
+entry_point_name: ''
+experiment_id: '284438070019608692'
+lifecycle_stage: active
+run_id: 2e9e36cef72e4ff4882b7f6243807693
+run_name: RandomForest_Best
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765147440897
+status: 3
+tags: []
+user_id: eyabe
