@@ -36,7 +36,7 @@ st.markdown("---")
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/d/d2/Font_Awesome_5_solid_home_white.svg", width=100)
     st.markdown("### Model Performance")
-    st.success("Random Forest\nRMSE: $28,208")
+    st.success("Random Forest\nRMSE:  28207.582545732184")
     st.info("Trained on Ames Housing Dataset\n2,930 properties • 79 features")
     st.markdown("### Tech Stack")
     st.write("• FastAPI • DVC • MLflow\n• Docker • GitHub Actions\n• Streamlit • Evidently AI")
