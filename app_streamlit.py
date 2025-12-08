@@ -123,7 +123,7 @@ if st.button("Predict House Price", type="primary", use_container_width=True):
 st.markdown("---")
 st.markdown("""
 <div class='footer'>
-    <b>MLOps Project • 8 Weeks • 100% Compliant with Requirements</b><br>
-    Khouloud Ouni & Eya Ben Khadhra • December 2025
+    <b>MLOps Project • Khouloud Ouni & Eya Ben Khadhra • December 2025</b><br>
+    
 </div>
 """, unsafe_allow_html=True)
