@@ -24,12 +24,13 @@ End-to-end MLOps pipeline for predicting house prices in Ames, Iowa (2,930 prope
 
 
 **Bonus beyond specifications**  
-Professional **Streamlit interface** connected to FastAPI  
+**Streamlit interface** connected to FastAPI  
 Ultra-clean, production-ready code
 
 ---
 
-### Project File Structure (Standard & Professional)
+### Project File Structure
+```
 project-house-price-mlops/
 ├── .dvc/                  # DVC config and cache (for data/model versioning)
 ├── .github/
@@ -70,7 +71,7 @@ project-house-price-mlops/
 ├── requirements.txt       # Python dependencies 
 ├── README.md              # Comprehensive README 
 ├── .gitignore             # Ignore venv, __pycache__, etc.
-
+```
 
 
 
