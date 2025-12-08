@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline – House Price Prediction
 
 on:
   push:
@@ -7,25 +7,61 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Create virtual environment
+        run: python -m venv venv
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Run tests
-        run: pytest tests/
-  
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: docker build -t house-price-infer -f docker/Dockerfile.infer .
-      # Add deploy steps (e.g., push to AWS ECR)
+        run: |
+          .\venv\Scripts\Activate.ps1
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: |
+          .\venv\Scripts\Activate.ps1
+          pytest tests/ -v
+
+      - name: Run full reproducible pipeline (DVC)
+        run: |
+          .\venv\Scripts\Activate.ps1
+          dvc repro --force
+        continue-on-error: false
+
+      - name: Generate monitoring report (Evidently AI)
+        run: |
+          .\venv\Scripts\Activate.ps1
+          python src/monitoring/monitor.py
+
+      - name: Build Docker image – FastAPI
+        run: docker build -f docker/Dockerfile.infer -t house-price-api:latest .
+
+      - name: Build Docker image – Streamlit (bonus)
+        run: docker build -f docker/Dockerfile.streamlit -t house-price-streamlit:latest .
+
+      - name: Upload drift report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-drift-report
+          path: reports/data_drift_report.html
+
+      - name: Success notification
+        if: success()
+        run: echo "Pipeline exécuté avec succès ! Modèle entraîné, API prête, monitoring OK."
+
+      - name: Deploy ready (AWS/GCP/Azure)
+        run: |
+          echo "Prêt pour déploiement sur AWS ECS/Fargate, GCP Cloud Run ou Azure Container Instances"
+          echo "Images Docker construites : house-price-api & house-price-streamlit"

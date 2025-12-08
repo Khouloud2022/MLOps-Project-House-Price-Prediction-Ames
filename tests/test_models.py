@@ -1,14 +1,14 @@
-# tests/test_models.py
-import pytest
-from src.models.predict_model import predict
-import pandas as pd
+# tests/test_model.py
+import joblib
+import numpy as np
+import os
 
-def test_predict():
-    sample_data = pd.DataFrame({
-        'Gr Liv Area': [1500], 'Total Bsmt SF': [1000], 'Year Built': [2000], 'Lot Area': [8000],
-        'Neighborhood': ['NAmes'], 'MS Zoning': ['RL'], 'Sale Condition': ['Normal']
-    })
-    preds = predict(sample_data)
-    assert len(preds) == 1
-    assert isinstance(preds[0], float)
-    assert preds[0] > 0  # Reasonable house price
+def test_model_exists():
+    assert os.path.exists("models/best_model.pkl")
+
+def test_model_prediction():
+    model = joblib.load("models/best_model.pkl")
+    X_test = np.load("data/processed/X_test.npy")
+    pred = model.predict(X_test[:5])
+    assert len(pred) == 5
+    assert all(pred > 0)  # prix positif
